@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jingyi Zhu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--color-forest:#1B4332;--color-sage:#52796F;--color-cream:#E8E4DC;--color-cream-light:#F0EDE6;--font-sans:'DM Sans',sans-serif;--font-serif:'Instrument Serif',serif;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:var(--color-cream);color:var(--color-forest);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:4px;background:rgba(255,255,255,0.6);backdrop-filter:blur(20px);border-radius:999px;padding:8px;box-shadow:0 2px 20px rgba(27,67,50,0.08);border:1px solid rgba(255,255,255,0.5)}
+.nav a{position:relative;padding:8px 16px;text-decoration:none;font-size:14px;letter-spacing:0.02em;color:var(--color-sage);border-radius:999px;transition:color 0.3s}
+.nav a.active{color:var(--color-forest);background:white;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.nav a:hover{color:var(--color-forest)}
+.page{display:none;min-height:100vh;padding-top:80px}
+.page.active{display:block}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;text-align:center}
+.hero-blob{position:absolute;border-radius:50%;pointer-events:none}
+.hero-blob-1{top:-30%;left:-20%;width:90vw;height:90vw;background:radial-gradient(circle,rgba(197,216,192,0.7) 0%,rgba(232,228,220,0) 70%)}
+.hero-blob-2{top:-10%;right:-15%;width:80vw;height:80vw;background:radial-gradient(circle,rgba(212,216,184,0.65) 0%,rgba(232,228,220,0) 70%)}
+.hero-blob-3{bottom:-25%;left:20%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(220,212,196,0.55) 0%,rgba(232,228,220,0) 70%)}
+.star{position:absolute;pointer-events:none}
+.hero h1{font-size:clamp(4rem,13vw,8.5rem);font-weight:700;letter-spacing:-0.02em;line-height:0.95;margin-bottom:32px;position:relative;z-index:10}
+.hero p{font-size:18px;color:var(--color-sage);letter-spacing:0.02em;max-width:500px;position:relative;z-index:10}
+.scroll-indicator{margin-top:112px;display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;z-index:10}
+.scroll-mouse{width:28px;height:48px;border-radius:999px;border:2px solid rgba(82,121,111,0.25);display:flex;justify-content:center;padding:6px}
+.scroll-dot{width:6px;height:6px;border-radius:50%;background:var(--color-sage);animation:sb 2s ease-in-out infinite}
+@keyframes sb{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
+.scroll-text{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--color-sage)}
+.section-header{text-align:center;margin-bottom:80px;padding-top:64px}
+.section-header h2{font-size:clamp(2.5rem,6vw,4rem);font-weight:700;line-height:1.05;margin-bottom:16px}
+.section-header p{color:var(--color-sage);font-size:16px;letter-spacing:0.02em}
+.card-grid{display:grid;grid-template-columns:1fr;gap:32px;max-width:1024px;margin:0 auto}
+@media(min-width:1024px){.card-grid{grid-template-columns:1fr 1fr}}
+.card-grid-3{display:grid;grid-template-columns:1fr;gap:24px;max-width:1024px;margin:0 auto}
+@media(min-width:768px){.card-grid-3{grid-template-columns:1fr 1fr 1fr}}
+.card{border-radius:2rem;overflow:hidden;cursor:pointer;transition:box-shadow 0.5s,transform 0.4s;box-shadow:0 4px 20px rgba(27,67,50,0.06)}
+.card:hover{box-shadow:0 20px 60px rgba(27,67,50,0.12);transform:scale(1.02)}
+.card-content{padding:32px 32px 16px}
+.card-content .tag{display:inline-block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:16px}
+.card-content h3{font-size:clamp(1.75rem,3vw,2.75rem);font-weight:700;line-height:1.1;margin-bottom:8px}
+.card-content p{font-size:14px;color:var(--color-sage)}
+.card-photo-wrap{padding:0 32px 32px}
+.card-photo{position:relative;border-radius:1rem;overflow:hidden}
+.card-photo img{width:100%;height:auto;display:block;transition:transform 0.7s}
+.card:hover .card-photo img{transform:scale(1.02)}
+.card-hover-overlay{position:absolute;inset:0;background:rgba(255,255,255,0.75);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:32px;opacity:0;transition:opacity 0.4s}
+.card:hover .card-hover-overlay{opacity:1}
+.card-hover-overlay p{font-family:var(--font-serif);font-size:18px;font-style:italic;text-align:center;line-height:1.6}
+.small-card{border-radius:2rem;overflow:hidden;cursor:pointer;background:#D0CCC4;transition:box-shadow 0.5s,transform 0.4s;box-shadow:0 4px 20px rgba(27,67,50,0.06)}
+.small-card:hover{box-shadow:0 12px 40px rgba(27,67,50,0.1);transform:scale(1.02)}
+.small-card-content{padding:24px 24px 16px}
+.small-card-content h4{font-size:1.25rem;font-weight:700;margin-bottom:4px}
+.small-card-content p{font-size:12px;color:var(--color-sage)}
+.small-card-photo{padding:0 24px 24px}
+.small-card-photo img{width:100%;height:auto;border-radius:1rem;display:block}
+.archive-desc{text-align:center;color:var(--color-sage);font-size:18px;max-width:600px;margin:0 auto 64px;line-height:1.6}
+.filter-pills{display:flex;justify-content:center;gap:12px;margin-bottom:64px;flex-wrap:wrap}
+.filter-pill{padding:10px 24px;border-radius:999px;font-size:14px;letter-spacing:0.02em;cursor:pointer;border:1px solid #C0B8A8;background:transparent;color:var(--color-sage);transition:all 0.3s}
+.filter-pill.active{background:var(--color-forest);color:var(--color-cream-light);border-color:transparent}
+.filter-pill:hover:not(.active){border-color:var(--color-sage)}
+.fragment-display{min-height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:64px;padding:0 16px}
+.fragment-card{background:#D0CCC4;border-radius:2rem;padding:40px 56px;max-width:640px}
+.fragment-card p{font-family:var(--font-serif);font-size:20px;font-style:italic;line-height:1.6}
+.fragment-empty{color:#84A98C;font-size:14px}
+.btn-primary{padding:14px 40px;border-radius:999px;background:var(--color-forest);color:var(--color-cream-light);font-size:14px;letter-spacing:0.02em;border:none;cursor:pointer;transition:background 0.3s}
+.btn-primary:hover{background:#2D6A4F}
+.divider-line{width:80px;height:1px;background:#C0B8A8;margin:80px auto 0}
+.about-block{border-radius:2.5rem;padding:40px 64px;margin-bottom:64px;position:relative;overflow:hidden}
+.about-block p{font-size:16px;line-height:1.8;position:relative;z-index:2}
+.about-block .quote{font-family:var(--font-serif);font-size:24px;font-style:italic;line-height:1.5}
+.about-block .divider{width:48px;height:1px;background:#84A98C;margin:24px 0}
+.about-block .deco-circle{position:absolute;border-radius:50%;opacity:0.5}
+.about-text{max-width:640px;margin:0 auto}
+.about-text p{font-size:16px;line-height:1.8}
+.about-colored{border-radius:1rem;padding:32px 40px;max-width:640px;margin:0 auto 48px}
+.footer{padding:80px 48px}
+.footer-inner{max-width:1024px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+@media(min-width:768px){.footer-inner{flex-direction:row;justify-content:space-between;align-items:center}}
+.footer-left{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-sage)}
+.footer-right{display:flex;gap:64px}
+.footer-col h4{font-size:14px;font-weight:600;margin-bottom:20px}
+.footer-col a{display:block;font-size:14px;color:var(--color-sage);text-decoration:none;margin-bottom:12px;transition:color 0.3s}
+.footer-col a:hover{color:var(--color-forest)}
+.footer-wave{display:flex;flex-direction:column;align-items:center;gap:16px;padding-top:64px}
+.sun-icon{width:48px;height:48px;border-radius:50%;background:var(--color-forest);display:flex;align-items:center;justify-content:center}
+.waveform{display:flex;align-items:flex-end;gap:3px;height:40px}
+.wave-bar{width:2px;border-radius:999px}
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(27,67,50,0.7);backdrop-filter:blur(24px);display:none;align-items:center;justify-content:center;padding:16px}
+.lightbox.active{display:flex}
+.lightbox-inner{background:var(--color-cream-light);border-radius:2rem;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.lightbox-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.8);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:10}
+.lightbox-header{padding:32px 40px 24px;border-radius:2rem 2rem 0 0}
+.lightbox-header .tag{display:inline-block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,0.5);margin-bottom:12px}
+.lightbox-header h3{font-size:2rem;font-weight:700}
+.lightbox-photos{padding:24px 40px 40px;display:flex;flex-direction:column;gap:24px}
+.lightbox-photos img{width:100%;border-radius:1rem}
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<nav class="nav">
+<a href="#home" class="active" onclick="showPage('home',this);return false">home</a>
+<a href="#archive" onclick="showPage('archive',this);return false">archive</a>
+<a href="#fragments" onclick="showPage('fragments',this);return false">fragments</a>
+<a href="#about" onclick="showPage('about',this);return false">about</a>
+</nav>
+
+<div id="home" class="page active">
+<section class="hero">
+<div class="hero-blob hero-blob-1"></div>
+<div class="hero-blob hero-blob-2"></div>
+<div class="hero-blob hero-blob-3"></div>
+<svg class="star" style="top:18%;right:16%" width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" fill="white" opacity="0.9"/></svg>
+<svg class="star" style="top:48%;left:10%" width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" fill="white" opacity="0.85"/></svg>
+<svg class="star" style="bottom:25%;right:28%" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 0L13.5 10.5L24 12L13.5 13.5L12 24L10.5 13.5L0 12L10.5 10.5L12 0Z" fill="white" opacity="0.7"/></svg>
+<h1>Hi. I'm Jingyi Zhu</h1>
+<p>welcome to my little world</p>
+<div class="scroll-indicator"><div class="scroll-mouse"><div class="scroll-dot"></div></div><span class="scroll-text">scroll</span></div>
+</section>
+
+<section style="padding:0 24px 96px;background:var(--color-cream)">
+<div style="max-width:1024px;margin:0 auto">
+<div class="section-header fade-in"><h2>moments</h2><p>vintage, travel, exploring, art</p></div>
+<div class="card-grid">
+<div class="card fade-in" style="background:#D8C8D0" onclick="openLightbox('vintage')"><div class="card-content"><span class="tag" style="background:rgba(166,142,158,0.3);color:#3D5248">vintage</span><h3>Trying On Time</h3><p>old clothes, older stories</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="photos/vintage3.jpg" alt="vintage" onerror="this.style.display='none';this.parentElement.style.minHeight='200px'"><div class="card-hover-overlay"><p>&ldquo;a dress that feels like it belonged to someone bolder&rdquo;</p></div></div></div></div>
+<div class="card fade-in" style="background:#C8D4D0" onclick="openLightbox('travel')"><div class="card-content"><span class="tag" style="background:rgba(142,174,164,0.3);color:#3D5248">travel</span><h3>Where Land Ends</h3><p>the sea keeps arriving</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="photos/travel2.jpg" alt="travel" onerror="this.style.display='none';this.parentElement.style.minHeight='200px'"><div class="card-hover-overlay"><p>&ldquo;the sea does not care about your plans&rdquo;</p></div></div></div></div>
+<div class="card fade-in" style="background:#D8D4C8" onclick="openLightbox('exploring')"><div class="card-content"><span class="tag" style="background:rgba(168,160,142,0.3);color:#3D5248">exploring</span><h3>City Corners</h3><p>places that feel out of time</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="photos/exploring2.jpg" alt="exploring" onerror="this.style.display='none';this.parentElement.style.minHeight='200px'"><div class="card-hover-overlay"><p>&ldquo;old buildings make me feel temporary&rdquo;</p></div></div></div></div>
+<div class="card fade-in" style="background:#D0C8D8" onclick="openLightbox('art')"><div class="card-content"><span class="tag" style="background:rgba(160,142,168,0.3);color:#3D5248">art</span><h3>Galleries &amp; Shows</h3><p>moments of quiet attention</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="photos/art1.jpg" alt="art" onerror="this.style.display='none';this.parentElement.style.minHeight='200px'"><div class="card-hover-overlay"><p>&ldquo;standing in front of something someone made&rdquo;</p></div></div></div></div>
+</div></div></section>
+
+<section style="padding:0 24px 96px;background:var(--color-cream)"><div style="max-width:1024px;margin:0 auto">
+<div class="section-header fade-in"><h2>what I made</h2><p>clothes I sewed and pieces I kept</p></div>
+<div class="card-grid-3">
+<div class="small-card fade-in"><div class="small-card-content"><h4>Green Gingham</h4><p>found in a rack of forgotten things</p></div><div class="small-card-photo"><img src="photos/album1.jpg" alt="" onerror="this.style.display='none'"></div></div>
+<div class="small-card fade-in"><div class="small-card-content"><h4>Mirror Moment</h4><p>trying on a different version of myself</p></div><div class="small-card-photo"><img src="photos/album2.jpg" alt="" onerror="this.style.display='none'"></div></div>
+<div class="small-card fade-in"><div class="small-card-content"><h4>Patterned Coat</h4><p>the kind of bold you do not plan</p></div><div class="small-card-photo"><img src="photos/album3.jpg" alt="" onerror="this.style.display='none'"></div></div>
+</div></div></section>
+</div>
+
+<div id="archive" class="page"><section style="padding:32px 24px 96px"><div style="max-width:1024px;margin:0 auto">
+<div class="section-header fade-in"><h2>archive</h2></div>
+<p class="archive-desc fade-in">films, books, and music that have stayed with me</p>
+<div class="filter-pills fade-in">
+<button class="filter-pill active" onclick="filterArchive('all',this)">all</button>
+<button class="filter-pill" onclick="filterArchive('films',this)">films</button>
+<button class="filter-pill" onclick="filterArchive('books',this)">books</button>
+<button class="filter-pill" onclick="filterArchive('music',this)">music</button>
+</div>
+<div class="card-grid" id="archive-grid">
+<div class="card archive-item fade-in" data-category="films" style="background:#D8C4D4"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">films</span><h3>Before Sunrise</h3><p>walking through a city you do not know</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/films.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;talking until the sky changes color&rdquo;</p></div></div></div></div>
+<div class="card archive-item fade-in" data-category="films" style="background:#D0C4CC"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">films</span><h3>In the Mood for Love</h3><p>a hallway too narrow</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/films.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;for what almost happened&rdquo;</p></div></div></div></div>
+<div class="card archive-item fade-in" data-category="books" style="background:#C8C8BE"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">books</span><h3>The Bell Jar</h3><p>under the fig tree</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/books.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;choosing one life means letting all the others fall&rdquo;</p></div></div></div></div>
+<div class="card archive-item fade-in" data-category="books" style="background:#C4C4B8"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">books</span><h3>Norwegian Wood</h3><p>a well so deep</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/books.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;you can hear the wind at the bottom&rdquo;</p></div></div></div></div>
+<div class="card archive-item fade-in" data-category="music" style="background:#C4D0C8"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">music</span><h3>Clair de Lune</h3><p>moonlight on water</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/music.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;glowing like a memory of daylight&rdquo;</p></div></div></div></div>
+<div class="card archive-item fade-in" data-category="music" style="background:#C8D0D4"><div class="card-content"><span style="display:block;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:#3D5248;opacity:0.7;margin-bottom:16px">music</span><h3>Mystery of Love</h3><p>summer air so thick</p></div><div class="card-photo-wrap"><div class="card-photo"><img src="images/music.jpg" alt=""><div class="card-hover-overlay"><p>&ldquo;you could wrap it around your shoulders&rdquo;</p></div></div></div></div>
+</div></div></section></div>
+
+<div id="fragments" class="page"><section style="padding:32px 24px 96px;min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center"><div style="max-width:768px;margin:0 auto;text-align:center">
+<div class="section-header fade-in"><h2>fragments</h2><p>small things, noticed and kept</p></div>
+<div class="fragment-display fade-in"><div class="fragment-card" id="fragment-card" style="display:none"><p id="fragment-text"></p></div><p class="fragment-empty" id="fragment-empty">press the button below</p></div>
+<button class="btn-primary fade-in" onclick="newFragment()">give me a thought</button>
+<div class="divider-line"></div></div></section></div>
+
+<div id="about" class="page"><section style="padding:32px 24px 96px"><div style="max-width:768px;margin:0 auto">
+<div class="section-header fade-in"><h2>about</h2><p>slowly, not all at once</p></div>
+<div class="about-block fade-in" style="background:#D4CFC8"><div class="deco-circle" style="top:-20%;right:-10%;width:192px;height:192px;background:#C8D8D0"></div><div class="deco-circle" style="bottom:-10%;left:-5%;width:128px;height:128px;background:#C0C8B8"></div><p class="quote">&ldquo;I am not any one of these things. I am the space where they overlap.&rdquo;</p><div class="divider"></div><p style="color:var(--color-sage)">I notice light. I save sentences. I believe the best conversations happen when both people forget to perform. I am still becoming.</p></div>
+<div class="about-text fade-in"><p>I studied business at a forestry university. The trees were everywhere, and so was the feeling that I was preparing for something I couldn't yet name.</p></div><div style="height:48px"></div>
+<div class="about-text fade-in"><p>For years, I worked in executive search. I spent my days listening to people describe the next version of themselves &mdash; strategy directors, investment leads, communications heads. I learned that everyone has a story they tell and another one they carry quietly.</p></div><div style="height:48px"></div>
+<div class="about-colored fade-in" style="background:#C8D8D0"><p>Then I stopped. Not forever, just for a while.</p><p style="margin-top:16px">I learned to make clothes. Pattern-making, cutting fabric on a table too small for ambition, sewing buttons by hand. I worked part-time in a vintage store, watching people find pieces of their past in someone else's old coat.</p></div><div style="height:48px"></div>
+<div class="about-text fade-in"><p>Now I work with drones. Tethered ones, the kind that stay connected to the ground while they rise. I handle sales and overseas expansion &mdash; building bridges between something very technical and someone who just needs to see from above.</p></div><div style="height:48px"></div>
+<div class="about-colored fade-in" style="background:#C4D0D8"><p>On the side, I'm building an AI legal assistant. Not because I love law, but because I think there are places where machines should handle the language so humans can handle the meaning.</p></div>
+</div></section></div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)"><div class="lightbox-inner" onclick="event.stopPropagation()"><button class="lightbox-close" onclick="closeLightbox()">&times;</button><div class="lightbox-header" id="lightbox-header" style="background:#D8C8D0"><span class="tag" id="lightbox-tag">vintage</span><h3 id="lightbox-title">Title</h3></div><div class="lightbox-photos" id="lightbox-photos"></div></div></div>
+
+<footer class="footer"><div class="footer-inner"><div class="footer-left"><span>&copy; 2026 Jingyi Zhu</span><span style="color:#B0A898">&bull;</span><a href="#" style="color:var(--color-sage);text-decoration:none">Colophon</a></div><div class="footer-right"><div class="footer-col"><h4>Elsewhere</h4><a href="#archive" onclick="showPage('archive',document.querySelectorAll('.nav a')[1]);return false">archive</a><a href="#fragments" onclick="showPage('fragments',document.querySelectorAll('.nav a')[2]);return false">fragments</a><a href="#about" onclick="showPage('about',document.querySelectorAll('.nav a')[3]);return false">about</a></div><div class="footer-col"><h4>Contact</h4><a href="#">Message</a></div></div></div><div class="footer-wave"><div class="sun-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg></div><div class="waveform" id="waveform"></div></div></footer>
+
+<script>
+function showPage(pageId,navLink){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(pageId).classList.add('active');document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));if(navLink)navLink.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+const lightboxData={vintage:{title:'Trying On Time',tag:'vintage',bg:'#D8C8D0',photos:['photos/vintage1.jpg','photos/vintage2.jpg','photos/vintage3.jpg']},travel:{title:'Where Land Ends',tag:'travel',bg:'#C8D4D0',photos:['photos/travel1.jpg','photos/travel2.jpg','photos/travel3.jpg']},exploring:{title:'City Corners',tag:'exploring',bg:'#D8D4C8',photos:['photos/exploring1.jpg','photos/exploring2.jpg','photos/exploring4.jpg']},art:{title:'Galleries & Shows',tag:'art',bg:'#D0C8D8',photos:['photos/art1.jpg','photos/art2.jpg','photos/art3.jpg']}};
+function openLightbox(theme){const d=lightboxData[theme];if(!d)return;document.getElementById('lightbox-tag').textContent=d.tag;document.getElementById('lightbox-title').textContent=d.title;document.getElementById('lightbox-header').style.background=d.bg;document.getElementById('lightbox-photos').innerHTML=d.photos.map(s=>`<img src="${s}" alt="" onerror="this.style.display='none'">`).join('');document.getElementById('lightbox').classList.add('active');document.body.style.overflow='hidden'}
+function closeLightbox(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('lightbox').classList.remove('active');document.body.style.overflow=''}
+function filterArchive(c,btn){document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.archive-item').forEach(i=>{i.style.display=(c==='all'||i.dataset.category===c)?'':'none'})}
+const fragments=["the light at 4pm in october is different from the light at 4pm in march. i don't know why i notice this.","some conversations feel like borrowing someone else's glasses. everything becomes clearer, but you know you have to give them back.","i once spent an entire afternoon organizing my bookshelf by color. it made no sense, but it felt like putting things in emotional order.","the space between what you meant to say and what you actually said. that's where most of my thinking happens.","recruiting taught me that people's stories are rarely linear. the best candidates always had a chapter they almost skipped.","sewing is just a way of making patience visible.","there is a particular kind of quiet in a vintage store. it holds the weight of everything that has already been lived.","drones look down and see patterns humans miss. i wonder what else we're too close to see.","a legal document and a poem both try to do the same thing: close the gap between what we mean and what we can prove.","i think the most interesting people are the ones who cannot explain why they do what they do. they just feel the pull.","sometimes i miss the version of me who didn't know what she wanted. she was lighter, somehow.","beijing at night from above: a grid of light that looks like someone is trying to spell something in a language i almost understand.","the first button on a handmade shirt always ends up slightly crooked. i used to fix it. now i leave it.","in another life, i am still a headhunter, still listening to strangers describe the future they secretly doubt.","ai cannot feel the weight of a decision. that's why we still need people who can.","i collect moments where the boundary between work and self disappears. they are rare, but they are the point.","the problem with wanting many things is that each one seems to contradict the others. the beauty is that they don't.","i notice the way people hold their coffee cups. it says more than their resume ever could.","gap years are just society's term for someone who needed time to become harder to categorize.","the best sales calls i've made were the ones where i forgot i was selling anything."];
+let cf=-1;
+function newFragment(){let ni;do{ni=Math.floor(Math.random()*fragments.length)}while(ni===cf&&fragments.length>1);cf=ni;document.getElementById('fragment-empty').style.display='none';const c=document.getElementById('fragment-card');c.style.display='block';c.style.opacity='0';c.style.transform='translateY(12px)';setTimeout(()=>{document.getElementById('fragment-text').textContent=fragments[ni];c.style.opacity='1';c.style.transform='translateY(0)'},50)}
+const obs=new IntersectionObserver(e=>e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')}),{threshold:0.1,rootMargin:'-60px'});document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+const wf=document.getElementById('waveform');[2,3,4,5,6,8,10,12,14,16,20,16,14,12,10,8,6,5,4,3,2,3,4,5,6,4,3,2].forEach((h,i)=>{const b=document.createElement('div');b.className='wave-bar';b.style.height=h+'px';b.style.background=i===10?'var(--color-forest)':(i>7&&i<13?'var(--color-sage)':'#C0B8A8');b.style.opacity=i===10?'1':'0.6';wf.appendChild(b)});
+</script>
+</body>
+</html>
